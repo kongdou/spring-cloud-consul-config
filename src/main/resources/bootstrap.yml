@@ -1,0 +1,54 @@
+server:
+  port: 5555
+
+spring:
+  profiles:
+    active: dev #默认是开发环境      test测试环境  prod 生产环境
+  application:
+    name: consul-info
+  cloud:
+    config:
+        enabled: false
+    consul:
+      host: localhost
+      port: 8500
+      enabled: true
+      config:
+        enabled: true
+        format: YAML
+        data-key: configuration
+        acl-token:
+      discovery:
+        enabled: true
+        instanceId: ${spring.application.name}-${spring.cloud.consul.host}-${spring.cloud.consul.port}
+        serviecName: ${spring.application.name}
+        health-check-interval: 5s
+        healthCheckPath: /health
+        preferIpAddress: true
+   #  在consul kv新建 config/application,dev/configuration  datasource是所有项目的全局dev环境配置
+      datasource:
+        ssbp:
+          type: com.alibaba.druid.pool.DruidDataSource
+          url: jdbc:informix-sqli://121.196.213.243:49001/eas:informixserver=tienon_db;NEWLOACLE=en_us,zh_cn,zh_tw;NEWCODESET=GBK,8859-1,819,Big5;IFX_USE_STRENC=true;
+          username: informix
+          password: Tienon@informix.com
+          driver-class-name: com.informix.jdbc.IfxDriver
+          max-active: 10
+          max-idle: 3
+          min-idle: 3
+          initial-size: 5
+          filters: stat,slf4j
+          connectionInitSqls: "SET LOCK MODE TO WAIT 5"
+
+ #  在consul kv新建 config/consul-info/configuration 是consul-info项目的配置信息
+ #consul-info 是spring: application: name 的取值
+userInfo:
+  lw:
+      name: LiaoWenn
+      sex: 女
+      age: 24
+      like: jazz
+
+LiaoWenn:
+  address: 上海市浦东新区
+  email: 123456@qq.com
